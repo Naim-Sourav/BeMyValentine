@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Valentine's Day My Love</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Galada&family=Sacramento&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        :root {
+            /* New Premium Color Palette */
+            --primary: #ff0a54;      /* Vibrant Hot Pink */
+            --primary-light: #ff477e; /* Lighter Pink */
+            --secondary: #ff85a1;     /* Soft Pink */
+            --bg-gradient-start: #fff0f3;
+            --bg-gradient-end: #ffccd5;
+            --glass: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --text: #590d22;          /* Deep Burgundy for contrast */
+            --text-light: #800f2f;
+            --shadow: 0 10px 40px -10px rgba(255, 10, 84, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Galada', cursive;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text);
+            overflow-x: hidden;
+            padding-bottom: 90px;
+        }
+        
+        /* --- Utilities --- */
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.8s ease forwards; }
+        
+        /* --- Password Modal --- */
+        .password-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 240, 243, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .lock-icon {
+            font-size: 80px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            animation: heartbeat 1.5s infinite;
+        }
+        
+        .password-content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px 30px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(255, 10, 84, 0.15);
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            border: 1px solid white;
+        }
+        
+        .password-content h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ffc2d1;
+            border-radius: 50px;
+            font-size: 18px;
+            text-align: center;
+            outline: none;
+            transition: 0.3s;
+            background: #fff5f7;
+            color: var(--text);
+            font-weight: 500;
+            margin-bottom: 20px;
+            font-family: 'Galada', cursive;
+        }
+        
+        .password-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 5px rgba(255, 10, 84, 0.1);
+            background: white;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 20px;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 10, 84, 0.2);
+            font-family: 'Galada', cursive;
+        }
+        
+        .submit-btn:active { transform: scale(0.98); }
+        
+        /* --- Main App Container --- */
+        .app-container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .app-container.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            margin-top: 20px;
+        }
+        
+        header h1 {
+            font-family: 'Sacramento', cursive;
+            font-size: 52px;
+            background: linear-gradient(45deg, var(--primary), #c9184a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+            drop-shadow: 2px 2px 4px rgba(255, 180, 180, 0.3);
+        }
+        
+        header p {
+            font-size: 13px;
+            color: var(--text-light);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 5px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* --- Tab Content Cards --- */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        .tab-content.active { display: block; }
+        
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 34px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(255, 10, 84, 0.1);
+        }
+
+        /* --- Slider Styles --- */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 10px 0 30px 0;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            cursor: grab;
+        }
+        
+        .slider-wrapper:active {
+            cursor: grabbing;
+        }
+
+        .slide {
+            min-width: 100%;
+            padding: 0 15px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* CARD DESIGN - REASONS */
+        .reason-slide-card {
+            width: 100%;
+            height: 300px;
+            border-radius: 35px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: white;
+            box-shadow: 
+                0 15px 35px -5px rgba(255, 10, 84, 0.1),
+                0 5px 15px rgba(0,0,0,0.03);
+            border: 1px solid #fff0f3;
+        }
+        
+        .reason-slide-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 35px;
+            padding: 2px;
+            background: linear-gradient(45deg, #ffc2d1, transparent, #ffc2d1);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .card-number {
+            position: absolute;
+            top: 25px;
+            right: 30px;
+            font-size: 28px;
+            font-family: 'Dancing Script', cursive;
+            color: #ffb3c1;
+            z-index: 1;
+        }
+
+        .reason-text {
+            font-size: 30px;
+            font-weight: 400;
+            line-height: 1.5;
+            z-index: 1;
+            /* Gradient Text */
+            background: linear-gradient(45deg, var(--primary), #c9184a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: 'Galada', cursive;
+        }
+        
+        .last-card .reason-text {
+            font-size: 26px;
+        }
+
+        /* CARD DESIGN - BUCKET LIST */
+        .bucket-slide-card {
+            width: 100%;
+            height: 300px;
+            border-radius: 35px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(180deg, #ffffff 0%, #fff0f3 100%);
+            box-shadow: 0 15px 35px -5px rgba(255, 10, 84, 0.1);
+            border: 1px solid white;
+        }
+
+        .bucket-icon {
+            font-size: 50px;
+            color: white;
+            margin-bottom: 25px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(255, 10, 84, 0.25);
+        }
+
+        .bucket-text {
+            font-size: 28px;
+            color: var(--text);
+            font-family: 'Galada', cursive;
+            margin-bottom: 0;
+            line-height: 1.4;
+        }
+
+        /* Slider Controls */
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            gap: 15px;
+        }
+
+        .slider-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #ffccd5;
+            border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .dot.active {
+            width: 28px;
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        .swipe-hint {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 15px;
+            opacity: 0.6;
+            animation: pulse 2s infinite;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* --- Other Styles --- */
+        .letter-paper {
+            background: #fff;
+            /* Dot pattern */
+            background-image: radial-gradient(#ffb3c1 1px, transparent 1px);
+            background-size: 20px 20px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            font-weight: 500;
+            color: #590d22;
+            max-height: 400px;
+            overflow-y: auto;
+            position: relative;
+            line-height: 1.9;
+            font-family: 'Montserrat', sans-serif;
+            border: 2px solid white;
+        }
+        
+        .letter-inner {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px dashed #ff8fa3;
+        }
+
+        /* Notes Grid */
+        .notes-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .sticky-note {
+            background: #fffdf0;
+            padding: 25px;
+            border-radius: 2px 2px 20px 2px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.05);
+            font-family: 'Dancing Script', cursive;
+            font-size: 26px;
+            color: #555;
+            position: relative;
+            transform: rotate(-1deg);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+        
+        .sticky-note:hover {
+            transform: scale(1.02) rotate(0deg);
+        }
+        
+        .sticky-note::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-width: 0 20px 20px 0;
+            border-style: solid;
+            border-color: rgba(0,0,0,0.05) #fff rgba(0,0,0,0.05) rgba(0,0,0,0.05);
+            box-shadow: -2px 2px 2px rgba(0,0,0,0.05);
+        }
+
+        /* Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .photo-frame {
+            background: white;
+            padding: 6px;
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            aspect-ratio: 1;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+            transition: transform 0.5s;
+            position: relative;
+            z-index: 1;
+            background: #ffebee;
+        }
+        
+        .photo-frame:active img { transform: scale(1.1); }
+
+        /* --- Bottom Navigation --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%; 
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 12px 20px;
+            border-radius: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 40px -5px rgba(255, 10, 84, 0.2);
+            z-index: 500;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #ff8fa3;
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            font-family: 'Montserrat', sans-serif;
+            flex: 1;
+            position: relative;
+        }
+        
+        .nav-item i {
+            font-size: 24px;
+            margin-bottom: 4px;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .nav-item.active { color: var(--primary); }
+        .nav-item.active i { 
+            transform: translateY(-5px);
+            filter: drop-shadow(0 5px 10px rgba(255, 10, 84, 0.3));
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.1); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.1); }
+            70% { transform: scale(1); }
+        }
+        
+        .floating-heart {
+            position: fixed;
+            color: var(--primary);
+            font-size: 20px;
+            pointer-events: none;
+            animation: floatUp 6s linear infinite;
+            z-index: -1;
+            opacity: 0.6;
+            text-shadow: 0 0 5px rgba(255, 10, 84, 0.2);
+        }
+        
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+        }
+        
+        .typing-effect::after { content: '|'; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+    </style>
+</head>
+<body>
+
+    <!-- Lock Screen / Password Modal -->
+    <div class="password-modal" id="passwordModal">
+        <div class="lock-icon">
+            <i class="ph-fill ph-heart"></i>
+        </div>
+        <div class="password-content">
+            <h2>Be My Valentine?</h2>
+            <p style="margin-bottom: 20px; font-size: 14px; color: #880e4f; font-family: 'Montserrat', sans-serif;">Enter the magic word to enter my world</p>
+            <div class="input-group">
+                <input type="password" class="password-input" id="passwordInput" placeholder="Password...">
+            </div>
+            <button class="submit-btn" id="submitPassword">Unlock My Heart</button>
+            <p style="margin-top: 15px; font-size: 12px; color: #b0586e; font-weight: 500; font-family: 'Montserrat', sans-serif; letter-spacing: 0.5px;">(Hint: Our daughter's name)</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="app-container" id="mainApp">
+        <header>
+            <h1 id="greeting">Happy Valentine's Day</h1>
+            <p>I Love You More Than Words Can Say</p>
+        </header>
+
+        <!-- Tab: Letter -->
+        <div class="tab-content active" id="tab-letter">
+            <div class="card">
+                <h3 class="section-title">My Heart's Whisper</h3>
+                <div class="letter-paper">
+                    <div class="letter-inner">
+                        <p><strong>My Dearest Love,</strong></p>
+                        <p>On this special day, I want to remind you how much you mean to me. You are not just my partner, but my best friend, my soulmate, and the love of my life.</p>
+                        <p>Every moment with you is a treasure. Thank you for filling my life with laughter, joy, and endless love. I promise to hold your hand through every season of life.</p>
+                        <p>You make my world complete.</p>
+                        <p><br>Forever Yours,<br><strong>Me</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Reasons (SWIPE SLIDER) -->
+        <div class="tab-content" id="tab-reasons">
+            <h3 class="section-title">Why I Love You</h3>
+            
+            <div class="slider-container" id="swipeContainer">
+                <div class="slider-wrapper" id="reasonsWrapper">
+                    <!-- Slide 1 -->
+                    <div class="slide">
+                        <div class="reason-slide-card">
+                            <span class="card-number">01</span>
+                            <div class="reason-text">তোমার মায়াবী হাসির জন্য</div>
+                        </div>
+                    </div>
+                    <!-- Slide 2 -->
+                    <div class="slide">
+                        <div class="reason-slide-card">
+                            <span class="card-number">02</span>
+                            <div class="reason-text">তোমার অপরিসীম যত্নের জন্য</div>
+                        </div>
+                    </div>
+                    <!-- Slide 3 -->
+                    <div class="slide">
+                        <div class="reason-slide-card">
+                            <span class="card-number">03</span>
+                            <div class="reason-text">আমাকে সব সময় সাপোর্ট করার জন্য</div>
+                        </div>
+                    </div>
+                    <!-- Slide 4 -->
+                    <div class="slide">
+                        <div class="reason-slide-card">
+                            <span class="card-number">04</span>
+                            <div class="reason-text">আমার সব পাগলামি সহ্য করার জন্য</div>
+                        </div>
+                    </div>
+                    <!-- Slide 5 -->
+                    <div class="slide">
+                        <div class="reason-slide-card">
+                            <span class="card-number">05</span>
+                            <div class="reason-text">আমার সব বকবক শোনার জন্য</div>
+                        </div>
+                    </div>
+                    <!-- Slide 6 -->
+                    <div class="slide">
+                        <div class="reason-slide-card last-card">
+                            <span class="card-number">∞</span>
+                            <div class="reason-text">এবং আরও হাজারো কারণ আছে যা বলে শেষ করা যাবে না... ❤️</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dots & Hint -->
+            <div class="slider-controls">
+                <div class="slider-dots" id="dotsContainer">
+                    <!-- Dots will be generated by JS -->
+                </div>
+            </div>
+            <p class="swipe-hint">← Swipe to see more →</p>
+        </div>
+
+        <!-- Tab: Bucket List (SWIPE SLIDER) -->
+        <div class="tab-content" id="tab-bucket">
+            <h3 class="section-title">Future Bucket List</h3>
+            
+            <div class="slider-container" id="bucketSwipeContainer">
+                <div class="slider-wrapper" id="bucketWrapper">
+                    
+                    <!-- Bucket 1 -->
+                    <div class="slide">
+                        <div class="bucket-slide-card">
+                            <div class="bucket-icon"><i class="ph-fill ph-mountains"></i></div>
+                            <div class="bucket-text">একসাথে পাহাড় দেখা বাকি</div>
+                        </div>
+                    </div>
+
+                    <!-- Bucket 2 -->
+                    <div class="slide">
+                        <div class="bucket-slide-card">
+                            <div class="bucket-icon"><i class="ph-fill ph-airplane-tilt"></i></div>
+                            <div class="bucket-text">দেশ বিদেশ ঘুরা বাকি</div>
+                        </div>
+                    </div>
+
+                    <!-- Bucket 3 -->
+                    <div class="slide">
+                        <div class="bucket-slide-card">
+                            <div class="bucket-icon"><i class="ph-fill ph-bowl-food"></i></div>
+                            <div class="bucket-text">একসাথে Momos খাওয়া বাকি</div>
+                        </div>
+                    </div>
+
+                    <!-- Bucket 4 -->
+                    <div class="slide">
+                        <div class="bucket-slide-card">
+                            <div class="bucket-icon"><i class="ph-fill ph-trophy"></i></div>
+                            <div class="bucket-text">জীবনে সাকসেস হওয়া বাকি</div>
+                        </div>
+                    </div>
+
+                    <!-- Bucket 5 (Wedding) -->
+                    <div class="slide">
+                        <div class="bucket-slide-card">
+                            <div class="bucket-icon"><i class="ph-fill ph-heart"></i></div>
+                            <div class="bucket-text">আমাদের ড্রিম ওয়েডিং বাকি</div>
+                        </div>
+                    </div>
+
+                    <!-- Bucket 6 (Pori) -->
+                    <div class="slide">
+                        <div class="bucket-slide-card">
+                            <div class="bucket-icon"><i class="ph-fill ph-baby"></i></div>
+                            <div class="bucket-text">পরি কে পৃথিবীতে আনা বাকি🫣</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Dots & Hint -->
+            <div class="slider-controls">
+                <div class="slider-dots" id="bucketDotsContainer">
+                    <!-- Dots will be generated by JS -->
+                </div>
+            </div>
+            <p class="swipe-hint">← Swipe to see more →</p>
+        </div>
+
+        <!-- Tab: Notes -->
+        <div class="tab-content" id="tab-notes">
+            <h3 class="section-title">Some Reminders</h3>
+            <div class="notes-grid">
+                <div class="sticky-note" style="transform: rotate(1deg); background: #fff5f5; border-color: #ffccd5 transparent #ffccd5 #ffccd5;">
+                    Take care always ❤️
+                </div>
+                <div class="sticky-note" style="transform: rotate(-1deg); background: #fff0f3; border-color: #ffb3c1 transparent #ffb3c1 #ffb3c1;">
+                    Eat on time 🍱
+                </div>
+                <div class="sticky-note" style="transform: rotate(2deg); background: #fff9c4; border-color: #fff59d transparent #fff59d #fff59d;">
+                    You're mine.. always 🔒
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Gallery -->
+        <div class="tab-content" id="tab-gallery">
+            <h3 class="section-title">Our Memories</h3>
+            <div class="card" style="padding: 10px;">
+                <div class="gallery-grid">
+                    <div class="photo-frame"><img src="images/pic1.jpg" alt="Memory 1" onerror="this.src='https://placehold.co/400x400/pink/white?text=Memory+1'"></div>
+                    <div class="photo-frame"><img src="images/pic2.jpg" alt="Memory 2" onerror="this.src='https://placehold.co/400x400/pink/white?text=Memory+2'"></div>
+                    <div class="photo-frame"><img src="images/pic3.jpg" alt="Memory 3" onerror="this.src='https://placehold.co/400x400/pink/white?text=Memory+3'"></div>
+                    <div class="photo-frame"><img src="images/pic4.jpg" alt="Memory 4" onerror="this.src='https://placehold.co/400x400/pink/white?text=Memory+4'"></div>
+                    <div class="photo-frame"><img src="images/pic5.jpg" alt="Memory 5" onerror="this.src='https://placehold.co/400x400/pink/white?text=Memory+5'"></div>
+                    <div class="photo-frame"><img src="images/pic6.jpg" alt="Memory 6" onerror="this.src='https://placehold.co/400x400/pink/white?text=Memory+6'"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav hidden" id="bottomNav">
+        <button class="nav-item active" data-target="tab-letter">
+            <i class="ph ph-envelope-simple-open"></i>
+            <span>Letter</span>
+        </button>
+        <button class="nav-item" data-target="tab-reasons">
+            <i class="ph ph-heart-straight"></i>
+            <span>Reasons</span>
+        </button>
+        <button class="nav-item" data-target="tab-bucket">
+            <i class="ph ph-list-checks"></i>
+            <span>Bucket</span>
+        </button>
+        <button class="nav-item" data-target="tab-notes">
+            <i class="ph ph-note-pencil"></i>
+            <span>Notes</span>
+        </button>
+        <button class="nav-item" data-target="tab-gallery">
+            <i class="ph ph-image-square"></i>
+            <span>Gallery</span>
+        </button>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const passwordModal = document.getElementById('passwordModal');
+            const passwordInput = document.getElementById('passwordInput');
+            const submitBtn = document.getElementById('submitPassword');
+            const mainApp = document.getElementById('mainApp');
+            const bottomNav = document.getElementById('bottomNav');
+            const greeting = document.getElementById('greeting');
+
+            // --- Password Logic ---
+            function unlockApp() {
+                const pass = passwordInput.value.toLowerCase().trim();
+                if (pass === 'pori') {
+                    passwordModal.style.transform = 'translateY(-100%)';
+                    passwordModal.style.opacity = '0';
+                    setTimeout(() => {
+                        passwordModal.style.display = 'none';
+                        mainApp.classList.remove('hidden');
+                        setTimeout(() => mainApp.classList.add('visible'), 100);
+                        bottomNav.classList.remove('hidden');
+                        typeWriter("Happy Valentine's Day!", greeting);
+                        createHeartBurst();
+                    }, 500);
+                } else {
+                    passwordInput.style.borderColor = '#e91e63';
+                    passwordInput.classList.add('shake');
+                    setTimeout(() => {
+                        passwordInput.style.borderColor = '#ffc2d1';
+                        passwordInput.value = '';
+                    }, 500);
+                }
+            }
+
+            submitBtn.addEventListener('click', unlockApp);
+            passwordInput.addEventListener('keypress', (e) => {
+                if(e.key === 'Enter') unlockApp();
+            });
+
+            // --- Navigation Logic ---
+            const navItems = document.querySelectorAll('.nav-item');
+            const tabs = document.querySelectorAll('.tab-content');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    tabs.forEach(tab => tab.classList.remove('active'));
+                    item.classList.add('active');
+                    const targetId = item.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+
+            // --- Generic Swipe Slider Function ---
+            function initSlider(wrapperId, containerId, dotsId) {
+                const wrapper = document.getElementById(wrapperId);
+                const slides = wrapper.querySelectorAll('.slide');
+                const dotsContainer = document.getElementById(dotsId);
+                const swipeContainer = document.getElementById(containerId);
+                
+                let currentSlide = 0;
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                // Generate Dots
+                slides.forEach((_, index) => {
+                    const dot = document.createElement('div');
+                    dot.classList.add('dot');
+                    if(index === 0) dot.classList.add('active');
+                    dotsContainer.appendChild(dot);
+                });
+                const dots = dotsContainer.querySelectorAll('.dot');
+
+                function updateSlider() {
+                    wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+                    dots.forEach((dot, index) => {
+                        if (index === currentSlide) dot.classList.add('active');
+                        else dot.classList.remove('active');
+                    });
+                }
+
+                // Swipe Events
+                swipeContainer.addEventListener('touchstart', e => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, {passive: true});
+
+                swipeContainer.addEventListener('touchend', e => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                }, {passive: true});
+                
+                // Mouse drag support
+                swipeContainer.addEventListener('mousedown', e => {
+                    touchStartX = e.screenX;
+                });
+                swipeContainer.addEventListener('mouseup', e => {
+                    touchEndX = e.screenX;
+                    handleSwipe();
+                });
+
+                function handleSwipe() {
+                    const sensitivity = 50;
+                    if (touchEndX < touchStartX - sensitivity) {
+                        // Swipe Left -> Next
+                        if (currentSlide < slides.length - 1) currentSlide++;
+                        else currentSlide = 0; // Loop
+                        updateSlider();
+                    }
+                    if (touchEndX > touchStartX + sensitivity) {
+                        // Swipe Right -> Prev
+                        if (currentSlide > 0) currentSlide--;
+                        else currentSlide = slides.length - 1; // Loop
+                        updateSlider();
+                    }
+                }
+            }
+
+            // Initialize both sliders
+            initSlider('reasonsWrapper', 'swipeContainer', 'dotsContainer');
+            initSlider('bucketWrapper', 'bucketSwipeContainer', 'bucketDotsContainer');
+
+
+            // --- Floating Hearts ---
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('floating-heart');
+                heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💖';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+                heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 7000);
+            }
+
+            setInterval(createHeart, 600);
+            function createHeartBurst() {
+                for(let i=0; i<30; i++) setTimeout(createHeart, i * 50);
+            }
+
+            // --- Typewriter ---
+            function typeWriter(text, element) {
+                element.innerHTML = "";
+                element.classList.add('typing-effect');
+                let i = 0;
+                function type() {
+                    if (i < text.length) {
+                        element.innerHTML += text.charAt(i);
+                        i++;
+                        setTimeout(type, 100);
+                    } else {
+                        element.classList.remove('typing-effect');
+                    }
+                }
+                type();
+            }
+        });
+    </script>
+</body>
+</html>
